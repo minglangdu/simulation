@@ -6,5 +6,5 @@
 using namespace std;
 
 int main() {
-    map::foo();
+    
 }
