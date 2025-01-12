@@ -5,8 +5,8 @@ The following is a list of attributes that objects may have:
 
 ---
 
-*only a difficulty of -1 makes it impossible to go to the square*
-*positive difficulties hinder movement but cannot stop it completely*
+*Only a difficulty of -1 makes it impossible to go to the square*<br>
+*Positive difficulties hinder movement but cannot stop it completely*
 *(there is a minimum)*
 <br><br>
 

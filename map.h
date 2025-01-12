@@ -26,6 +26,20 @@ namespace map {
         public:
             Map(std::vector<std::vector<Location*>> m); // normal init
             Map(int n, int m); // overloaded quick constructor
+
+            int GetPass(Location* loc);
+
+            std::vector<std::vector<Location*>> ChangeCells(int x1, int y1, 
+            int x2, int y2, std::vector<std::vector<Location*>> l); // range from [x1, x2], [y1, y2] inclusive
+            std::vector<std::vector<Location*>> ChangeCells(int x1, int y1, 
+            int x2, int y2, Location* l);
+
+            // changes that to the matrix specified
+            std::vector<std::vector<Location*>> GetMatrix();
+            std::vector<std::vector<int>> GetPassMat();
+
+            std::vector<std::vector<Location*>> ChangeCell(int x, int y, Location* l); // same but for one cell
+        private:
             std::vector<std::vector<Location*>> matrix;
             std::vector<std::vector<int>> passable;
     };
