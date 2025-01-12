@@ -1,5 +1,11 @@
 # WIP NPC Project
 
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/minglangdu/Simulation)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/minglangdu/Simulation)
+![GitHub contributors](https://img.shields.io/github/contributors/minglangdu/Simulation)
+![GitHub Repo stars](https://img.shields.io/github/stars/minglangdu/Simulation)
+![GitHub forks](https://img.shields.io/github/forks/minglangdu/Simulation)
+
 Partly inspired by one of my favorit games, Dwarf Fortress.
 
 Had a cool idea about how to simulate people and had nothing else to do lol.
