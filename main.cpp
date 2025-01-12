@@ -22,15 +22,12 @@ void LoadRaws() {
 
 int main() {
     LoadRaws();
-    cout << "-----\n";
-    for (auto a : map::obj_types) {
-        cout << a.first << " " << a.second.attr["DIFFICULTY"] << "|\n";
-    }
-    cout << "-----\n";
-    map::Object wall = map::obj_types["WALL"];
-    map::Location* loc = new map::Location(vector<map::Object> (1, wall));
+    map::Location* walloc = new map::Location(vector<map::Object> (1, map::obj_types["WALL"]));
+    walloc->objects.push_back(map::obj_types["FLOOR"]);
+    map::Location* sandloc = new map::Location(vector<map::Object> (1, map::obj_types["SAND_FLOOR"]));
     map::Map* mp = new map::Map(5, 5);
-    mp->ChangeCells(1, 1, 3, 2, loc);
+    mp->ChangeCells(0, 0, 4, 4, sandloc);
+    mp->ChangeCells(1, 1, 3, 2, walloc);
     vector<vector<int>> pass = mp->GetPassMat();
     for (int i = 0; i < 5; i ++) {
         for (int j = 0; j < 5; j ++) {
@@ -38,5 +35,4 @@ int main() {
         }
         cout << "\n";
     }
-    cout << wall.attr["DESCRIPTION"] << "\n";
 }

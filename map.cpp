@@ -11,6 +11,8 @@ using std::cout;
 using std::vector;
 using std::ifstream;
 
+const bool DEBUG = false;
+
 std::map<string, map::Object> map::obj_types = {};
 std::map<string, map::Object> map::init_objs(string path) {
     ifstream objraw(path);
@@ -23,41 +25,48 @@ std::map<string, map::Object> map::init_objs(string path) {
     while (getline(objraw, line)) {
         for (int i = 0; i < line.size(); i ++) {
             if (line[i] == '[') {
-                cout << "left bracket\n";
+                if (DEBUG) cout << "left bracket\n";
                 l = "";
                 inright = false;
             } 
             else if (line[i] == ':') {
-                cout << "(gd) colon: ";
-                cout << l << "\n";
+                if (DEBUG) {
+                    cout << "(gd) colon: ";
+                    cout << l << "\n";
+                }
                 inright = true;
                 if (!indef) {
-                    if (l != "OBJECT") ignore = true;
+                    if (l != "OBJECT") {
+                        ignore = true;
+                        if (DEBUG) cout << "IGNORING\n";
+                    }
                 }
                 r = "";
             }
             else if (line[i] == ']') {
-                cout << "right bracket: ";
-                cout << l << " " << r << "\n";
+                if (DEBUG) {
+                    cout << "right bracket: ";
+                    cout << l << " " << r << "\n";
+                }
                 if (indef) { // means just finished reading attribute
-                    cout << "INDEF\n";
+                    if (l == "ENDDEF") {
+                        if (DEBUG) cout << "NOT INDEF\n";
+                        ignore = false;
+                        indef = false;
+                    }
+                    // cout << "INDEF\n";
                     if (l == "NAME") { // hardcode for now
                         tem.name = r;
                     }
                     obj_types[tem.id].attr[l] = r;
                 }
                 else { // means you finished reading object declaration
+                    if (ignore) continue;
                     indef = true; 
-                    cout << "NOW INDEF\n";
+                    if (DEBUG) cout << "NOW INDEF\n";
                     tem.id = r;
                     obj_types[tem.id] = tem;
                 }
-                if (l == "ENDDEF") {
-                    cout << "NOT INDEF\n";
-                    ignore = false;
-                    indef = false;
-                }
-                if (ignore) continue;
             }
             else if (!inright) {
                 l += line[i];
@@ -151,7 +160,11 @@ vector<vector<map::Location*>> map::Map::ChangeCells(int x1, int y1, int x2, int
 vector<vector<map::Location*>> l) {
     for (int i = y1; i <= y2; i ++) {
         for (int j = x1; j <= x2; j ++) {
-            matrix[i][j] = l[i - y1][j - x1];
+            map::Location cur = *(l[i - y1][j - x1]);
+            cur.chunk = this;
+            cur.x = j;
+            cur.y = i;
+            matrix[i][j] = &cur;
             passable[i][j] = GetPass(matrix[i][j]);
         }
     }
@@ -160,8 +173,8 @@ vector<vector<map::Location*>> l) {
 
 vector<vector<map::Location*>> map::Map::ChangeCells(int x1, int y1, int x2, int y2, 
 map::Location* l) {
-    return map::Map::ChangeCells(x1, y1, x2, y2, vector<vector<map::Location*>> (x2 - x1 + 1, 
-vector<map::Location*> (y2 - y1 + 1, l)));
+    return map::Map::ChangeCells(x1, y1, x2, y2, vector<vector<map::Location*>> (y2 - y1 + 1, 
+vector<map::Location*> (x2 - x1 + 1, l)));
 }
 
 vector<vector<map::Location*>> map::Map::ChangeCell(int x, int y, map::Location* l) {
@@ -174,4 +187,27 @@ vector<vector<map::Location*>> map::Map::GetMatrix() {
 }
 vector<vector<int>> map::Map::GetPassMat() {
     return passable;
+}
+
+vector<vector<char>> map::Map::GetCharRep() {
+    vector<vector<char>> rep (matrix.size(), vector<char> (matrix[0].size(), '?'));
+    for (int i = 0; i < matrix.size(); i ++) {
+        for (int j = 0; j < matrix[0].size(); j ++) {
+            int bestz = -1e9; string bestc = "?";
+            cout << matrix[i][j]->x << "\n";
+            for (Object o : matrix[i][j]->objects) {
+                cout << i << " " << j << " " << o.attr["TILE"] << "\n";
+                int z; string c = (o.attr["TILE"] != "") ? o.attr["TILE"] : "?";
+                try {
+                    z = std::stoi(o.attr["ZLEVEL"]);
+                }
+                catch (...) {
+                    z = 0;
+                }
+                if (z > bestz) bestc = c;
+            }
+            rep[i][j] = bestc[0];
+        }
+    }
+    return rep;
 }
