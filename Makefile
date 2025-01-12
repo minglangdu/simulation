@@ -5,7 +5,7 @@ goal:
 	g++ -c -std=c++11 -Wall main.cpp
 	g++ ai.o map.o main.o -o main
 	./main
-	rm main
-	rm ai.o
-	rm map.o
-	rm main.o
+	-rm main
+	-rm ai.o
+	-rm map.o
+	-rm main.o

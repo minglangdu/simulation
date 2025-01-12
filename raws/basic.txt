@@ -1,0 +1,4 @@
+[OBJECT:WALL]
+[NAME:Wall]
+[DIFFICULTY:-1]
+[ENDDEF:-1]

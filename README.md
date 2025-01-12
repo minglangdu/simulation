@@ -1,5 +1,7 @@
 # WIP NPC Project
 
+Partly inspired by one of my favorit games, Dwarf Fortress.
+
 Had a cool idea about how to simulate people and had nothing else to do lol.
 Basic system I envisioned in case I forget:
 
