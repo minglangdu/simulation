@@ -9,3 +9,10 @@ The following is a list of attributes that objects may have:
 *Positive difficulties hinder movement but cannot stop it completely*
 *(there is a minimum)*
 <br><br>
+
+**DESCRIPTION** (string): unused as of now, self-explanatory.
+
+---
+
+*Just a description.*
+<br><br>

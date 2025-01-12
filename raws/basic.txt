@@ -1,4 +1,5 @@
 [OBJECT:WALL]
 [NAME:Wall]
 [DIFFICULTY:-1]
+[DESCRIPTION:A simple wall]
 [ENDDEF:-1]

@@ -38,4 +38,5 @@ int main() {
         }
         cout << "\n";
     }
+    cout << wall.attr["DESCRIPTION"] << "\n";
 }
