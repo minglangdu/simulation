@@ -24,11 +24,25 @@ int main() {
     LoadRaws();
     map::Location* walloc = new map::Location(vector<map::Object> (1, map::obj_types["WALL"]));
     walloc->objects.push_back(map::obj_types["FLOOR"]);
+    cout << walloc->objects.size() << " " << walloc->x << " " << walloc->y << "\n";
     map::Location* sandloc = new map::Location(vector<map::Object> (1, map::obj_types["SAND_FLOOR"]));
+    cout << sandloc->objects.size() << " " << sandloc->x << " " << sandloc->y << "\n";
     map::Map* mp = new map::Map(5, 5);
+    cout << mp->GetMatrix()[0][0]->objects.size() << " " << mp->GetMatrix()[0][0]->x << " " << mp->GetMatrix()[0][0]->y << "\n";
+    cout << "====\n";
+    cout << mp->GetMatrix()[0][0]->x << "\n";
+    vector<vector<char>> pass = mp->GetCharRep();
+    for (int i = 0; i < 5; i ++) {
+        for (int j = 0; j < 5; j ++) {
+            cout << pass[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    cout << "----\n";
     mp->ChangeCells(0, 0, 4, 4, sandloc);
     mp->ChangeCells(1, 1, 3, 2, walloc);
-    vector<vector<int>> pass = mp->GetPassMat();
+    cout << "====\n";
+    pass = mp->GetCharRep();
     for (int i = 0; i < 5; i ++) {
         for (int j = 0; j < 5; j ++) {
             cout << pass[i][j] << " ";

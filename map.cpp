@@ -128,14 +128,20 @@ int map::Map::GetPass(map::Location* loc) {
 }
 
 map::Map::Map(vector<vector<map::Location*>> m) {
+    cout << "--init1--\n";
     for (int i = 0; i < m.size(); i ++) {
         for (int j = 0; j < m[0].size(); j ++) {
             m[i][j]->x = j;
             m[i][j]->y = i;
             m[i][j]->chunk = this;
+            cout << "-\n";
+            cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->chunk << "\n";
+            cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->chunk << "\n";
+            cout << "-\n";
         }
     }
     matrix = m;
+    cout << "set matrix\n";
     vector<vector<int>> p (matrix.size(), vector<int> (matrix[0].size(), 5));
     for (int i = 0; i < matrix.size(); i ++) {
         for (int j = 0; j < matrix[0].size(); j ++) {
@@ -146,12 +152,25 @@ map::Map::Map(vector<vector<map::Location*>> m) {
 }
 
 vector<vector<map::Location*>> generate_empty(int n, int m) {
-    map::Location* empty = new map::Location(vector<map::Object> ());
-    vector<vector<map::Location*>> v (n, vector<map::Location*> (m, empty));
+    cout << "--generate empty--\n";
+    vector<vector<map::Location*>> v (n, vector<map::Location*> (m));
+    for (int i = 0; i < n; i ++) {
+        for (int j = 0; j < m; j ++) {
+            map::Location next = map::Location(vector<map::Object> ());
+            next.x = j;
+            next.y = i;
+            cout << "-\n";
+            cout << next.x << " " << next.y << " " << next.objects.size() << "\n";
+            v[i][j] = &next;
+            cout << v[i][j]->x << " " << v[i][j]->y << " " << v[i][j]->objects.size() << "\n";
+            cout << "-\n";
+        }
+    }
+    cout << "finished generating\n";
     return v;
 }
 
-map::Map::Map(int n, int m) : Map(generate_empty(n, m)) {
+map::Map::Map(int m, int n) : Map(generate_empty(n, m)) {
     // quick initialization
     // uses an initializer list
 }
@@ -194,9 +213,12 @@ vector<vector<char>> map::Map::GetCharRep() {
     for (int i = 0; i < matrix.size(); i ++) {
         for (int j = 0; j < matrix[0].size(); j ++) {
             int bestz = -1e9; string bestc = "?";
-            cout << matrix[i][j]->x << "\n";
-            for (Object o : matrix[i][j]->objects) {
-                cout << i << " " << j << " " << o.attr["TILE"] << "\n";
+            cout << matrix[i][j]->objects.size() << "\n";
+            for (int k = 0; k < 5; k ++) {
+                cout << i << " " << j << "\n";
+                Object o = matrix[i][j]->objects[k];
+                cout << "AAA\n";
+                cout << o.attr["TILE"] << "\n";
                 int z; string c = (o.attr["TILE"] != "") ? o.attr["TILE"] : "?";
                 try {
                     z = std::stoi(o.attr["ZLEVEL"]);

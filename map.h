@@ -29,7 +29,7 @@ namespace map {
     class Map {
         public:
             Map(std::vector<std::vector<Location*>> m); // normal init
-            Map(int n, int m); // overloaded quick constructor
+            Map(int m, int n); // overloaded quick constructor
 
             int GetPass(Location* loc);
 
