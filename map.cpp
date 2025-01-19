@@ -131,12 +131,15 @@ map::Map::Map(vector<vector<map::Location*>> m) {
     cout << "--init1--\n";
     for (int i = 0; i < m.size(); i ++) {
         for (int j = 0; j < m[0].size(); j ++) {
-            m[i][j]->x = j;
-            m[i][j]->y = i;
-            m[i][j]->chunk = this;
-            cout << "-\n";
-            cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->chunk << "\n";
-            cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->chunk << "\n";
+            cout << "-\n" << i << " " << j << " " << m[i][j]->objects.size() << "\n";
+            map::Location tem = Location(m[i][j]->objects);
+            tem.x = j;
+            tem.y = i;
+            tem.chunk = this;
+            m[i][j] = &tem;
+            cout << tem.x << " " << tem.y << " " << tem.objects.size() << "\n";
+            cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->objects.size() << "\n";
+            cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->objects.size() << "\n";
             cout << "-\n";
         }
     }
