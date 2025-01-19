@@ -129,6 +129,12 @@ int map::Map::GetPass(map::Location* loc) {
 
 map::Map::Map(vector<vector<map::Location*>> m) {
     cout << "--init1--\n";
+    cout << m[1][1]->objects.size() << "\n";
+    for (int i = 1; i < m.size(); i ++) {
+        for (int j = 1; j < m.size(); j ++) {
+            cout << m[i][j]->objects.size() << "\n";
+        }
+    }
     for (int i = 0; i < m.size(); i ++) {
         for (int j = 0; j < m[0].size(); j ++) {
             cout << "-\n" << i << " " << j << " " << m[i][j]->objects.size() << "\n";
@@ -140,7 +146,6 @@ map::Map::Map(vector<vector<map::Location*>> m) {
             cout << tem.x << " " << tem.y << " " << tem.objects.size() << "\n";
             cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->objects.size() << "\n";
             cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->objects.size() << "\n";
-            cout << "-\n";
         }
     }
     matrix = m;
@@ -159,7 +164,7 @@ vector<vector<map::Location*>> generate_empty(int n, int m) {
     vector<vector<map::Location*>> v (n, vector<map::Location*> (m));
     for (int i = 0; i < n; i ++) {
         for (int j = 0; j < m; j ++) {
-            map::Location next = map::Location(vector<map::Object> ());
+            map::Location next = map::Location(vector<map::Object> (0));
             next.x = j;
             next.y = i;
             cout << "-\n";
