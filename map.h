@@ -44,7 +44,7 @@ namespace map {
 
             std::vector<std::vector<Location*>> ChangeCell(int x, int y, Location* l); // same but for one cell
         
-            std::vector<std::vector<char>> GetCharRep();
+            std::vector<std::vector<std::string>> GetRep();
         private:
             std::vector<std::vector<Location*>> matrix;
             std::vector<std::vector<int>> passable;

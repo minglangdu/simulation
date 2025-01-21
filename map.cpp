@@ -10,6 +10,8 @@ using std::string;
 using std::cout;
 using std::vector;
 using std::ifstream;
+using std::stoi;
+using std::string;
 
 const bool DEBUG = false;
 
@@ -129,27 +131,28 @@ int map::Map::GetPass(map::Location* loc) {
 
 map::Map::Map(vector<vector<map::Location*>> m) {
     cout << "--init1--\n";
-    cout << m[1][1]->objects.size() << "\n";
-    for (int i = 1; i < m.size(); i ++) {
-        for (int j = 1; j < m.size(); j ++) {
-            cout << m[i][j]->objects.size() << "\n";
-        }
+
+    for (int aa = 0; false;) {  
     }
+    for (int k = 0; false;) {
+    }
+
     for (int i = 0; i < m.size(); i ++) {
         for (int j = 0; j < m[0].size(); j ++) {
-            cout << "-\n" << i << " " << j << " " << m[i][j]->objects.size() << "\n";
+            // cout << "-\n" << i << " " << j << " " << m[i][j]->objects.size() << "\n";
             map::Location tem = Location(m[i][j]->objects);
             tem.x = j;
             tem.y = i;
             tem.chunk = this;
             m[i][j] = &tem;
-            cout << tem.x << " " << tem.y << " " << tem.objects.size() << "\n";
-            cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->objects.size() << "\n";
-            cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->objects.size() << "\n";
+            // cout << tem.x << " " << tem.y << " " << tem.objects.size() << "\n";
+            // cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->objects.size() << "\n";
+            // cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->objects.size() << "\n";
         }
     }
     matrix = m;
     cout << "set matrix\n";
+    // cout << m[0][0]->objects.size() << " " << GetMatrix()[0][0]->objects.size() << "\n";
     vector<vector<int>> p (matrix.size(), vector<int> (matrix[0].size(), 5));
     for (int i = 0; i < matrix.size(); i ++) {
         for (int j = 0; j < matrix[0].size(); j ++) {
@@ -167,11 +170,10 @@ vector<vector<map::Location*>> generate_empty(int n, int m) {
             map::Location next = map::Location(vector<map::Object> (0));
             next.x = j;
             next.y = i;
-            cout << "-\n";
-            cout << next.x << " " << next.y << " " << next.objects.size() << "\n";
+            // cout << "-\n";
+            // cout << next.x << " " << next.y << " " << next.objects.size() << "\n";
             v[i][j] = &next;
-            cout << v[i][j]->x << " " << v[i][j]->y << " " << v[i][j]->objects.size() << "\n";
-            cout << "-\n";
+            // cout << v[i][j]->x << " " << v[i][j]->y << " " << v[i][j]->objects.size() << "\n";
         }
     }
     cout << "finished generating\n";
@@ -216,17 +218,16 @@ vector<vector<int>> map::Map::GetPassMat() {
     return passable;
 }
 
-vector<vector<char>> map::Map::GetCharRep() {
-    vector<vector<char>> rep (matrix.size(), vector<char> (matrix[0].size(), '?'));
+vector<vector<string>> map::Map::GetRep() {
+    vector<vector<string>> rep (matrix.size(), vector<string> (matrix[0].size(), "?"));
+    cout << "--getcharrep--\n";
     for (int i = 0; i < matrix.size(); i ++) {
         for (int j = 0; j < matrix[0].size(); j ++) {
             int bestz = -1e9; string bestc = "?";
-            cout << matrix[i][j]->objects.size() << "\n";
+            // for (int k = 0; k < matrix[i][j]->objects.size(); k ++) {
             for (int k = 0; k < 5; k ++) {
-                cout << i << " " << j << "\n";
-                Object o = matrix[i][j]->objects[k];
-                cout << "AAA\n";
-                cout << o.attr["TILE"] << "\n";
+                // Object o = matrix[i][j]->objects[k];
+                Object o = map::obj_types["WALL"];
                 int z; string c = (o.attr["TILE"] != "") ? o.attr["TILE"] : "?";
                 try {
                     z = std::stoi(o.attr["ZLEVEL"]);
@@ -236,7 +237,7 @@ vector<vector<char>> map::Map::GetCharRep() {
                 }
                 if (z > bestz) bestc = c;
             }
-            rep[i][j] = bestc[0];
+            rep[i][j] = bestc;
         }
     }
     return rep;

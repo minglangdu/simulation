@@ -30,9 +30,8 @@ int main() {
     
     cout << mp->GetMatrix()[0][0]->objects.size() << " " << mp->GetMatrix()[0][0]->x << " " << mp->GetMatrix()[0][0]->y << "\n";
     cout << "====\n";
-    cout << mp->GetMatrix()[0][0]->x << "\n";
 
-    vector<vector<char>> pass = mp->GetCharRep();
+    vector<vector<string>> pass = mp->GetRep();
     for (int i = 0; i < 5; i ++) {
         for (int j = 0; j < 5; j ++) {
             cout << pass[i][j] << " ";
@@ -43,7 +42,7 @@ int main() {
     mp->ChangeCells(0, 0, 4, 4, sandloc);
     mp->ChangeCells(1, 1, 3, 2, walloc);
     cout << "====\n";
-    pass = mp->GetCharRep();
+    pass = mp->GetRep();
     for (int i = 0; i < 5; i ++) {
         for (int j = 0; j < 5; j ++) {
             cout << pass[i][j] << " ";
