@@ -58,7 +58,9 @@ std::map<string, map::Object> map::init_objs(string path) {
                     }
                     // cout << "INDEF\n";
                     if (l == "NAME") { // hardcode for now
-                        tem.name = r;
+                        cout << "Set Name ";
+                        obj_types[tem.id].name = r;
+                        cout << obj_types[tem.id].name << "\n";
                     }
                     obj_types[tem.id].attr[l] = r;
                 }
@@ -68,6 +70,7 @@ std::map<string, map::Object> map::init_objs(string path) {
                     if (DEBUG) cout << "NOW INDEF\n";
                     tem.id = r;
                     obj_types[tem.id] = tem;
+                    cout << "ID " << tem.id << "\n";
                 }
             }
             else if (!inright) {
@@ -81,7 +84,7 @@ std::map<string, map::Object> map::init_objs(string path) {
 }
 
 string map::Object::use(std::string type) {
-    return name + " used. Type:" + type + "\n";
+    return name + " used. Type:" + type;
 }
 
 map::Object::Object(string idd, string nm, std::map<string, string> attributes) {
@@ -96,149 +99,4 @@ map::Object::Object(string idd) : map::Object::Object(idd, "Empty Object", {}) {
 
 map::Object::Object() : map::Object::Object("More Empty Object lol") {
     // more initializer list
-}
-
-map::Location::Location(vector<map::Object> o) {
-    objects = o;
-}
-
-int map::Map::GetPass(map::Location* loc) {
-    /*
-    passability: 
-    5 is maximum passability
-    multiply passability with base speed of an npc.
-    0 is impassible.
-    */
-    int cur = 0;
-    bool impass = false;
-    for (Object o : loc->objects) {
-        int current;
-        try {
-            current = std::stoi(o.attr["DIFFICULTY"]);
-        }
-        catch (...) {
-            current = 0;
-        }
-        cur += current;
-        if (current == -1) {
-            impass = true;
-            break;
-        }
-    }
-    if (impass) return 0;
-    else return std::max(1, 5 - cur);
-}
-
-map::Map::Map(vector<vector<map::Location*>> m) {
-    cout << "--init1--\n";
-
-    for (int aa = 0; false;) {  
-    }
-    for (int k = 0; false;) {
-    }
-
-    for (int i = 0; i < m.size(); i ++) {
-        for (int j = 0; j < m[0].size(); j ++) {
-            // cout << "-\n" << i << " " << j << " " << m[i][j]->objects.size() << "\n";
-            map::Location tem = Location(m[i][j]->objects);
-            tem.x = j;
-            tem.y = i;
-            tem.chunk = this;
-            m[i][j] = &tem;
-            // cout << tem.x << " " << tem.y << " " << tem.objects.size() << "\n";
-            // cout << m[i][j]->x << " " << m[i][j]->y << " " << m[i][j]->objects.size() << "\n";
-            // cout << m[0][0]->x << " " << m[0][0]->y << " " << m[0][0]->objects.size() << "\n";
-        }
-    }
-    matrix = m;
-    cout << "set matrix\n";
-    // cout << m[0][0]->objects.size() << " " << GetMatrix()[0][0]->objects.size() << "\n";
-    vector<vector<int>> p (matrix.size(), vector<int> (matrix[0].size(), 5));
-    for (int i = 0; i < matrix.size(); i ++) {
-        for (int j = 0; j < matrix[0].size(); j ++) {
-            p[i][j] = GetPass(matrix[i][j]);
-        }
-    }
-    passable = p;
-}
-
-vector<vector<map::Location*>> generate_empty(int n, int m) {
-    cout << "--generate empty--\n";
-    vector<vector<map::Location*>> v (n, vector<map::Location*> (m));
-    for (int i = 0; i < n; i ++) {
-        for (int j = 0; j < m; j ++) {
-            map::Location next = map::Location(vector<map::Object> (0));
-            next.x = j;
-            next.y = i;
-            // cout << "-\n";
-            // cout << next.x << " " << next.y << " " << next.objects.size() << "\n";
-            v[i][j] = &next;
-            // cout << v[i][j]->x << " " << v[i][j]->y << " " << v[i][j]->objects.size() << "\n";
-        }
-    }
-    cout << "finished generating\n";
-    return v;
-}
-
-map::Map::Map(int m, int n) : Map(generate_empty(n, m)) {
-    // quick initialization
-    // uses an initializer list
-}
-
-vector<vector<map::Location*>> map::Map::ChangeCells(int x1, int y1, int x2, int y2, 
-vector<vector<map::Location*>> l) {
-    for (int i = y1; i <= y2; i ++) {
-        for (int j = x1; j <= x2; j ++) {
-            map::Location cur = *(l[i - y1][j - x1]);
-            cur.chunk = this;
-            cur.x = j;
-            cur.y = i;
-            matrix[i][j] = &cur;
-            passable[i][j] = GetPass(matrix[i][j]);
-        }
-    }
-    return matrix;
-}
-
-vector<vector<map::Location*>> map::Map::ChangeCells(int x1, int y1, int x2, int y2, 
-map::Location* l) {
-    return map::Map::ChangeCells(x1, y1, x2, y2, vector<vector<map::Location*>> (y2 - y1 + 1, 
-vector<map::Location*> (x2 - x1 + 1, l)));
-}
-
-vector<vector<map::Location*>> map::Map::ChangeCell(int x, int y, map::Location* l) {
-    vector<vector<map::Location*>> mat (1, vector<map::Location*> (1, l));
-    return map::Map::ChangeCells(x, y, x, y, mat);
-}
-
-vector<vector<map::Location*>> map::Map::GetMatrix() {
-    return matrix;
-}
-vector<vector<int>> map::Map::GetPassMat() {
-    return passable;
-}
-
-vector<vector<string>> map::Map::GetRep() {
-    vector<vector<string>> rep (matrix.size(), vector<string> (matrix[0].size(), "?"));
-    cout << "--getcharrep--\n";
-    for (int i = 0; i < matrix.size(); i ++) {
-        for (int j = 0; j < matrix[0].size(); j ++) {
-            int bestz = -1e9; string bestc = "?";
-            // for (int k = 0; k < matrix[i][j]->objects.size(); k ++) {
-            for (int k = 0; k < 5; k ++) {
-                // Object o = matrix[i][j]->objects[k];
-                Object o = map::obj_types["WALL"];
-                int z; string c = (o.attr["TILE"] != "") ? o.attr["TILE"] : "?";
-                try {
-                    z = std::stoi(o.attr["ZLEVEL"]);
-                }
-                catch (...) {
-                    z = 0;
-                }
-                if (z > bestz) bestc = c;
-            }
-            rep[i][j] = bestc;
-        }
-    }
-    return rep;
 }
