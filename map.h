@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <set>
 
 namespace map {
     class Object {
@@ -19,4 +20,5 @@ namespace map {
     };
     extern std::map<std::string, Object> obj_types; // extern prevents the variable from being defined, only declared
     std::map<std::string, Object> init_objs(std::string path);
+    std::map<std::string, std::map<std::string, std::string>> parse(std::string path, std::set<std::string> ptypes);
 }

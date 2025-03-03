@@ -11,7 +11,6 @@ goal: ai.cpp map.cpp main.cpp
 	-g++ ai.o map.o main.o -o main
 	-./main
 clean: main
-	echo "Cleaning..."
 	-rm main
 	-rm ai.o
 	-rm map.o
