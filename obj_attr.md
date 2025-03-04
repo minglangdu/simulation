@@ -32,9 +32,15 @@ The following is a list of attributes that objects may have:
 *A higher Z level means the object will be displayed higher. The default Z level should be 0.*
 <br><br>
 
-**CONSTRUCTION** (boolean): unused as of now, dictates whether something is a construction.
+**CONSTRUCTION** (boolean): dictates whether something is a construction.
 
 ---
 
 *Constructions can't be moved, only deconstructed, like buildings and constructions in Dwarf Fortress.*
 <br><br>
+
+**TERRAIN** (boolean): dictates whether it can be used as a piece of terrain in a location.
+
+---
+
+*Terrain is a special object that can be used as the ground of a location. Terrain is similarly unmovable like a construction.*
