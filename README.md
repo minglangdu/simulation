@@ -14,7 +14,7 @@ Basic system I envisioned in case I forget:
 - **Motivations** are changed, *not* added when specific stimuli occur; they always exist so that there are almost always actions the npc wants to do. Motivations are *extremely* rarely negative, so the minimum is mostly 0 for many.
 - **Actions** are taken from a global list of possible actions for a particular "species" of npc. Specific actions are chosen by motivations; a motivation value increases likelihood of a new group of possible actions. Actions are chosen at random, with a weighting by motivations.
 - **Mood** is used to determine how much the character wants to do things. Normally, characters will only do actions which have a total motivation higher than the base willingness to do things (due to personality) minus the mood.
-- **Jobs** are implemented in case you want the player to indirectly influence them. Jobs are a subgroup of motivations, and have higher weights based on mood.
+- **Jobs** are implemented in case you want the player to indirectly influence them. Jobs are a subgroup of motivations.
 - **Personality** is changed throughout the character's life, and influences decision making in varioius ways. 
 
 ## Files

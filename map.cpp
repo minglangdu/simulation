@@ -18,6 +18,12 @@ using std::string;
 
 const bool DEBUG = false;
 
+/*
+Parsing
+*/
+
+std::map<string, map::Object> map::obj_types = {};
+
 std::map<string, std::map<string, string>> map::parse(string path, std::set<string> ptypes) {
     ifstream raw(path);
     string line;
@@ -80,7 +86,6 @@ std::map<string, std::map<string, string>> map::parse(string path, std::set<stri
     return res;
 }
 
-std::map<string, map::Object> map::obj_types = {};
 std::map<string, map::Object> map::init_objs(string path) {
     std::map<string, std::map<string, string>> parsed = parse(path, std::set<string> {"OBJECT"});
     for (auto obj : parsed) {
@@ -100,6 +105,10 @@ std::map<string, map::Object> map::init_objs(string path) {
     }
     return obj_types;
 }
+
+/*
+Object
+*/
 
 string map::Object::use(std::string type) {
     return name + " used. Type:" + type;
@@ -134,3 +143,25 @@ std::tuple<string, double, bool> map::Object::getattr(string key) {
     if (s == "YES") b = true;
     return {s, d, b};
 }
+
+/*
+Creature
+*/
+
+
+
+/*
+Biome
+*/
+
+
+
+/*
+Location
+*/
+
+
+
+/*
+Chunk
+*/
