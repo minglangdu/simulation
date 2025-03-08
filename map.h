@@ -36,7 +36,9 @@ namespace map {
     class Biome { // type of location
         public:
             // constructor function here
-            Biome(std::string name);
+            Biome(std::string nm, std::map<std::string, std::string> atr);
+            Biome(std::string nm); // gets the biome from the biomes list
+            Biome();
             std::string name;
             std::map<std::string, std::string> attr;
         private:
@@ -45,11 +47,11 @@ namespace map {
     class Location { // singular location
         public:
             // constructor function here
-            Location(std::pair<int, int> c, std::tuple<int, int, int> xyz);
+            Location(std::pair<int, int> c, std::tuple<int, int, int> xyz, Object terr);
             Object terrain;
             std::vector<Object> parts;
-            const int cx, cy; // chunk x, chunk y
-            const int x, y, z;
+            int cx, cy; // chunk x, chunk y
+            int x, y, z;
             
         private:
             std::vector<Creature> creatures; // storage for creatures
@@ -57,16 +59,18 @@ namespace map {
     class Chunk { // entire vertical subsection of map
         public:
             // constructor function here
-            Chunk(std::pair<int, int> c, std::string biome);
+            Chunk(std::pair<int, int> c, std::string bi);
             Biome biome;
             std::vector<std::vector<std::vector<Location>>> locs;
-            const int cx, cy; // chunk x, chunk y
+            int cx, cy; // chunk x, chunk y
             
             bool loaded;
         private:
             std::vector<Creature> creatures; // storage for creatures
     };
     extern std::vector<std::vector<Chunk>> whole; // entire map
+    extern std::map<std::string, Biome> biomes; // list of all biomes
+    std::map<std::string, Biome> init_biomes(std::string path);
     // Parsing and Raws
     extern std::map<std::string, Object> obj_types; // extern prevents the variable from being defined, only declared
     std::map<std::string, Object> init_objs(std::string path);

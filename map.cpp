@@ -23,6 +23,7 @@ Parsing
 */
 
 std::map<string, map::Object> map::obj_types = {};
+std::map<string, map::Biome> map::biomes = {};
 
 std::map<string, std::map<string, string>> map::parse(string path, std::set<string> ptypes) {
     ifstream raw(path);
@@ -106,6 +107,13 @@ std::map<string, map::Object> map::init_objs(string path) {
     return obj_types;
 }
 
+std::map<string, map::Biome> map::init_biomes(string path) {
+    std::map<string, std::map<string, string>> parsed = parse(path, std::set<string> {"BIOME"});
+
+    biomes = {};
+    return biomes;
+}
+
 /*
 Object
 */
@@ -148,20 +156,54 @@ std::tuple<string, double, bool> map::Object::getattr(string key) {
 Creature
 */
 
+map::Creature::Creature(string idd, string name, std::map<string, string> attributes)
+ : map::Object::Object(idd, name, attributes) {
+    mind = ai::Decisionmaker();
+ }
 
+string map::Creature::update() {
+    // placeholder - find and enact actions here
+    return "placeholder";
+}
 
 /*
 Biome
 */
 
+map::Biome::Biome(string nm, std::map<string, string> atr) {
+    name = nm;
+    attr = atr;
+}
 
+map::Biome::Biome(string nm) {
+    biomes[nm] = *this;
+}
+
+map::Biome::Biome() {}
 
 /*
 Location
 */
 
-
+map::Location::Location(std::pair<int, int> c, std::tuple<int, int, int> xyz, Object terr) {
+    cx = c.first; cy = c.second;
+    x = std::get<0> (xyz); y = std::get<1> (xyz); z = std::get<2> (xyz);
+    if (!std::get<2> (terr.getattr("TERRAIN"))) {
+        throw std::invalid_argument("Terrain tile not terrain");
+    }
+    else {
+        terrain = terr;
+    }
+}
 
 /*
 Chunk
 */
+
+map::Chunk::Chunk(std::pair<int, int> c, string bi) {
+    if (!biomes.count(bi)) {
+        throw std::invalid_argument("Biome name not found.");
+    }
+    biome = biomes[bi];
+    cx = c.first; cy = c.second;
+}
