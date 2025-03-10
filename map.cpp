@@ -18,6 +18,22 @@ using std::string;
 
 const bool DEBUG = false;
 
+std::tuple<std::string, double, bool> geta(std::string key, std::map<std::string, std::string> attr) {
+    string s = attr[key];
+    double d;
+    try {
+        double d = std::stod(s);
+        if (d == RLIM_INFINITY || isnan(d)) {
+            d = 0;
+        }
+    } catch (...) {
+        d = 0;
+    }
+    bool b = false;
+    if (s == "YES") b = true;
+    return {s, d, b};
+}
+
 /*
 Parsing
 */
@@ -137,19 +153,7 @@ map::Object::Object() : map::Object::Object("More Empty Object lol") {
 }
 
 std::tuple<string, double, bool> map::Object::getattr(string key) {
-    string s = attr[key];
-    double d;
-    try {
-        double d = std::stod(s);
-        if (d == RLIM_INFINITY || isnan(d)) {
-            d = 0;
-        }
-    } catch (...) {
-        d = 0;
-    }
-    bool b = false;
-    if (s == "YES") b = true;
-    return {s, d, b};
+    return geta(key, attr);
 }
 
 /*
@@ -181,6 +185,10 @@ map::Biome::Biome(string nm) {
 
 map::Biome::Biome() {}
 
+std::tuple<std::string, double, bool> map::Biome::getattr(std::string key) {
+    return geta(key, attr);
+}
+
 /*
 Location
 */
@@ -200,10 +208,41 @@ map::Location::Location(std::pair<int, int> c, std::tuple<int, int, int> xyz, Ob
 Chunk
 */
 
-map::Chunk::Chunk(std::pair<int, int> c, string bi) {
+std::vector<std::vector<map::Chunk>> map::whole = {};
+
+vector<vector<map::Chunk>> map::init_whole(int cxs, int cys, int csx, int csy, int csz) {
+    for (int chy = 0; chy < cys; chy ++) {
+        vector<map::Chunk> cur = {};
+        for (int chx = 0; chx < cxs; chx ++) {
+            string selbiome = "DESERT";
+            cur.push_back(Chunk({chx, chy}, selbiome, csx, csy, csz));
+        }
+        whole.push_back(cur);
+    }
+    return whole;
+}
+
+vector<vector<vector<map::Location>>> genflat(string tile1, string tile2, int val1, int val2, int csx, int csy, int csz) {
+    // tile 1: surface tile
+    // tile 2: all tiles below surface.
+    // Flat world with surface at z level val1 and end at z level csz - val2. 
+    return {};
+}
+
+map::Chunk::Chunk(std::pair<int, int> c, string bi, int csx, int csy, int csz) {
     if (!biomes.count(bi)) {
         throw std::invalid_argument("Biome name not found.");
     }
     biome = biomes[bi];
+    string type = std::get<0> (biome.getattr("GENERATION"));
+    string tile1 = std::get<0> (biome.getattr("TILE1"));
+    string tile2 = std::get<0> (biome.getattr("TILE2"));
+    int val1 = std::get<1> (biome.getattr("VAL1"));
+    int val2 = std::get<1> (biome.getattr("VAL1"));
+    if (type == "FLAT") {
+        locs = genflat(tile1, tile2, val1, val2, csx, csy, csz);
+    } else {
+        throw std::invalid_argument("Generation function not found.");
+    }
     cx = c.first; cy = c.second;
 }

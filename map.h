@@ -40,9 +40,9 @@ namespace map {
             Biome(std::string nm); // gets the biome from the biomes list
             Biome();
             std::string name;
+            std::tuple<std::string, double, bool> getattr(std::string key);
+        protected:
             std::map<std::string, std::string> attr;
-        private:
-
     };
     class Location { // singular location
         public:
@@ -59,7 +59,7 @@ namespace map {
     class Chunk { // entire vertical subsection of map
         public:
             // constructor function here
-            Chunk(std::pair<int, int> c, std::string bi);
+            Chunk(std::pair<int, int> c, std::string bi, int csx, int csy, int csz);
             Biome biome;
             std::vector<std::vector<std::vector<Location>>> locs;
             int cx, cy; // chunk x, chunk y
@@ -69,10 +69,13 @@ namespace map {
             std::vector<Creature> creatures; // storage for creatures
     };
     extern std::vector<std::vector<Chunk>> whole; // entire map
+    std::vector<std::vector<Chunk>> init_whole(int cxs, int cys, int csx, int csy, int csz);
+    // Parsing and Raws
     extern std::map<std::string, Biome> biomes; // list of all biomes
     std::map<std::string, Biome> init_biomes(std::string path);
-    // Parsing and Raws
+
     extern std::map<std::string, Object> obj_types; // extern prevents the variable from being defined, only declared
     std::map<std::string, Object> init_objs(std::string path);
+    
     std::map<std::string, std::map<std::string, std::string>> parse(std::string path, std::set<std::string> ptypes);
 }

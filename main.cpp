@@ -13,6 +13,11 @@ using std::cout;
 using std::ifstream;
 using std::get;
 
+// const int CHUNKS_X = 5;
+// const int CHUNKS_Y = 5;
+// const int EDGE_SIZE = 25;
+// const int HEIGHT = 50;
+
 void LoadRaws() {
     ifstream order("raws/loadorder.txt");
     string file;
