@@ -13,10 +13,10 @@ using std::cout;
 using std::ifstream;
 using std::get;
 
-// const int CHUNKS_X = 5;
-// const int CHUNKS_Y = 5;
-// const int EDGE_SIZE = 25;
-// const int HEIGHT = 50;
+const int CHUNKS_X = 5;
+const int CHUNKS_Y = 5;
+const int EDGE_SIZE = 25;
+const int HEIGHT = 50;
 
 void LoadRaws() {
     ifstream order("raws/loadorder.txt");
@@ -29,13 +29,6 @@ void LoadRaws() {
 
 int main() {
     LoadRaws();
-    map::Object* wall = &(map::obj_types["WALL"]);
-    cout << wall->use("hit") << "\n";
-    auto t = wall->getattr("CONSTRUCTION");
-    cout << get<0> (t) << " " << get<1> (t) << " " << get<2> (t) << "\n";
-    auto u = wall->getattr("INVALID_TEST");
-    cout << get<0> (u) << " " << get<1> (u) << " " << get<2> (u) << "\n";
-    map::Creature* crea = new map::Creature("PIG", "Boar", {});
-    auto v = crea->getattr("TERRAIN");
-    cout << get<0> (v) << " " << get<1> (v) << " " << get<2> (v) << "\n";
+    map::init_whole(CHUNKS_X, CHUNKS_Y, EDGE_SIZE, EDGE_SIZE, HEIGHT);
+    
 }

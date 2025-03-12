@@ -1,2 +1,3 @@
-raws/basic.txt
+raws/special.txt
+raws/objects.txt
 raws/biomes.txt

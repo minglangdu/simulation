@@ -44,3 +44,6 @@ The following is a list of attributes that objects may have:
 ---
 
 *Terrain is a special object that can be used as the ground of a location. Terrain is similarly unmovable like a construction.*
+<br><br>
+
+**INCORPOREAL** (boolean): dictates whether the object can be passed through or not. 

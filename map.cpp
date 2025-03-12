@@ -125,8 +125,18 @@ std::map<string, map::Object> map::init_objs(string path) {
 
 std::map<string, map::Biome> map::init_biomes(string path) {
     std::map<string, std::map<string, string>> parsed = parse(path, std::set<string> {"BIOME"});
-
     biomes = {};
+
+    for (auto b : parsed) {
+        string name;
+        try {
+            name = b.second["NAME"];
+            b.second.erase("NAME");
+        } catch (...) {
+            name = "Unnamed Biome\n";
+        }
+        biomes[b.first] = Biome(name, b.second);
+    }
     return biomes;
 }
 
@@ -204,6 +214,18 @@ map::Location::Location(std::pair<int, int> c, std::tuple<int, int, int> xyz, Ob
     }
 }
 
+map::Location::Location(std::pair<int, int> c, std::tuple<int, int, int> xyz) {
+    cx = c.first; cy = c.second;
+    x = std::get<0> (xyz); y = std::get<1> (xyz); z = std::get<2> (xyz);
+    terrain = obj_types["PLACEHOLDER"];
+}
+
+map::Location::Location() {
+    cx = -1; cy = -1; 
+    x = -1; y = -1; z = -1;
+    terrain = obj_types["PLACEHOLDER"];
+}
+
 /*
 Chunk
 */
@@ -222,11 +244,29 @@ vector<vector<map::Chunk>> map::init_whole(int cxs, int cys, int csx, int csy, i
     return whole;
 }
 
-vector<vector<vector<map::Location>>> genflat(string tile1, string tile2, int val1, int val2, int csx, int csy, int csz) {
+vector<vector<vector<map::Location>>> genflat(int cx, int cy, string tile1, string tile2, int val1, int val2, int csx, int csy, int csz) {
     // tile 1: surface tile
     // tile 2: all tiles below surface.
     // Flat world with surface at z level val1 and end at z level csz - val2. 
-    return {};
+    vector<vector<vector<map::Location>>> chunk; 
+    vector<vector<map::Location>> tem (csy, vector<map::Location> (csx));
+    vector<string> layers (val1, "PLACEHOLDER");
+    layers.push_back(tile1);
+    for (int z = val1 + 1; z < csz - val2; z ++) {
+        layers.push_back(tile2);
+    }
+    for (int z = csz - val2; z < csz; z ++) {
+        layers.push_back("PLACEHOLDER");
+    }
+    for (int z = 0; z < val1; z ++) {
+        for (int y = 0; y < csy; y ++) {
+            for (int x = 0; x < csx; x ++) {
+                tem[y][x] = map::Location({cx, cy}, {x, y, z}, map::obj_types[layers[z]]);
+            }
+        }
+        chunk.push_back(tem);
+    }
+    return chunk;
 }
 
 map::Chunk::Chunk(std::pair<int, int> c, string bi, int csx, int csy, int csz) {
@@ -240,7 +280,7 @@ map::Chunk::Chunk(std::pair<int, int> c, string bi, int csx, int csy, int csz) {
     int val1 = std::get<1> (biome.getattr("VAL1"));
     int val2 = std::get<1> (biome.getattr("VAL1"));
     if (type == "FLAT") {
-        locs = genflat(tile1, tile2, val1, val2, csx, csy, csz);
+        locs = genflat(c.first, c.second, tile1, tile2, val1, val2, csx, csy, csz);
     } else {
         throw std::invalid_argument("Generation function not found.");
     }

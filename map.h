@@ -48,6 +48,8 @@ namespace map {
         public:
             // constructor function here
             Location(std::pair<int, int> c, std::tuple<int, int, int> xyz, Object terr);
+            Location(std::pair<int, int> c, std::tuple<int, int, int> xyz);
+            Location();
             Object terrain;
             std::vector<Object> parts;
             int cx, cy; // chunk x, chunk y
